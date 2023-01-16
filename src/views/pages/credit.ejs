@@ -22,37 +22,51 @@
           <form action="/payment" method="POST" class="details-form">
             <h1 class="Top">Details</h1>
 
+            <input type="hidden" name="type" value="<%= data.type || "cart" %>" />
+
             <div class="Detail">
               <p>Name</p>
-              <input class="input-box" type="text" name="username" placeholder="Enter your name" />
+              <input class="input-box" type="text" name="name" placeholder="Enter your name" />
             </div>
 
             <div class="Detail">
               <p>Email add</p>
-              <input class="input-box" type="text" name="Email" placeholder="Enter your Email add" />
+              <input class="input-box" type="text" name="email" placeholder="Enter your Email add" />
             </div>
 
             <div class="Detail">
               <p>Phone No.</p>
-              <input type="text" class="input-box" name="Phone" placeholder="Enter your Phone no">
+              <input type="text" class="input-box" name="phone_no" placeholder="Enter your Phone no">
             </div>
             
             <div class="Detail">
               <p>Address</p>
-              <textarea class="input-box" type="text" name="Address" placeholder="Enter your Address"
+              <textarea class="input-box" type="text" name="address" placeholder="Enter your Address"
                 rows="3" ></textarea>
             </div>
             <div class="Detail">
               <p>Pin Code</p>
-              <input type="text" class="input-box" name="Pin Code" placeholder="Enter your Pin Code">
+              <input type="text" class="input-box" name="pincode" placeholder="Enter your Pin Code">
             </div>
 
             <div class="Detail">
               <p>City Name</p>
-              <input type="text" class="input-box" name="City Name" placeholder="Enter your City Name">
+              <input type="text" class="input-box" name="city" placeholder="Enter your City Name">
             </div>
 
-            <input type="checkbox" checked="checked">
+            <% if(data.type === "buy_now") { %>
+
+              <div class="Detail">
+              <% for(const price of data.product.prices) { %>
+                <div>
+                  <input type="radio" name="seller_product_id" value="<%= price.id %>" />
+                  <label class="checkbox"><%= price.variant_name %> | <%= price.price %> | <a style="color: darkblue; text-decoration: underline;" href="/profiles/<%= price.seller_id %>"><%= price.seller_name %></a></label>
+                </div>
+              <% } %>
+              </div>
+            <% } %>
+
+            <input type="checkbox" required>
             <label class="checkbox">I agree with terms and conditions</label>
             <span class="checkmark"></span>
             <br>

@@ -19,6 +19,14 @@ a {
   color: inherit;
 }
 
+.border-thin {
+  border-width: 1px;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
 .bg-primary {
   background-color: var(--primary);
   color: white;
@@ -44,6 +52,14 @@ a {
   display: flex;
 }
 
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
 .gap-2 {
   gap: 0.5rem;
 }
@@ -65,9 +81,19 @@ a {
   align-items: center;
 }
 
+.basic-container {
+  padding: 2rem;
+}
+
 .center-form {
   width: 100%;
   max-width: 24rem;
+  padding: 0 0.5rem;
+}
+
+.center-form-2 {
+  width: 100%;
+  max-width: 36rem;
   padding: 0 0.5rem;
 }
 

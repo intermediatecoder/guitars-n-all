@@ -1,0 +1,30 @@
+
+.orders {
+
+}
+
+.order-details {
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.order-item-list {
+  padding: 0.5rem;
+/*  display: flex;
+  flex-direction: column;*/
+}
+
+.order-item-list ul {
+  list-style-position: inside;
+}
+
+.order-item {
+
+}
+.order-summary {
+  padding-top: 0.5rem;
+}
+

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head'); %>
+  <title>Your orders | GuitarHub</title>
+
+  <link rel="stylesheet" href="/assets/css/orders.css" />
+</head>
+<body>
+<header>
+  <%- include('../partials/header'); %>
+</header>
+
+<main>
+  <div class="basic-container">
+    <h1>Your orders</h1>
+    <hr />
+
+    <% if(data && data.status === "success") { %>
+    <div class="orders">
+      <% for (const order of data.orders) {
+        let total = 0;
+      %>
+        <div>
+          <div class="order-details">
+            <h3>Order ID:</h3>
+            <p><%= order.order_id %>
+          </div>
+
+          <div class="order-item-list">
+            <% for(const item of order.items) {
+              const item_total_price = Number(item.price) * Number(item.quantity);
+              total += item_total_price;
+            %>
+              <div class="order-item">
+                <p><%= item.product_name %></p>
+                <p><b>Variant: </b><%= item.variant_name %></p>
+                <p><b>Quantity: </b><%= item.quantity %></p>
+                <p><b>Price: </b><%= item.price %></p>
+                <p><b>Total price: </b><%= item_total_price %></p>
+              </div>
+            <% } %>
+            <hr />
+            <div class="order-summary">
+              <p><b>Total = </b><%= total %>/-</p>
+            </div>
+          </div>
+        </div>
+      <% } %>
+    </div>
+    <% } else { %>
+    <b>Could not load orders.</b>
+    <% } %>
+
+  </div>
+</main>
+
+<footer>
+  <%- include('../partials/footer'); %>
+</footer>
+</body>
+</html>

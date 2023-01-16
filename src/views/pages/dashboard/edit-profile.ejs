@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../../partials/head'); %>
+  <title>Edit profile | GuitarHub</title>
+  <link rel="stylesheet" href="/assets/css/dashboard/edit-profile.css" />
+</head>
+<body>
+<header>
+  <%- include('../../partials/header'); %>
+</header>
+
+<main>
+  <div class="center-container">
+    <form action="/dashboard/edit-profile" method="POST" class="center-form-2">
+      <div>
+        <h2>Edit Profile</h2>
+      </div>
+      <% if(data) { %>
+      <div>
+        <p class="alert alert-<%= data.status %>"><%= data.message %></p>
+      </div>
+      <% } %>
+      <div class="input-group">
+        <p>Name</p>
+        <input class="input-box" name="name" type="text" value="<%= profile.name %>" />
+      </div>
+      <div class="input-group">
+        <p>Description</p>
+        <textarea class="input-box" name="description" rows="12"><%= profile.description %></textarea>
+      </div>
+      <button class="button-submit">Update profile</button>
+    </form>
+  </div>
+</main>
+
+<footer>
+  <%- include('../../partials/footer'); %>
+</footer>
+</body>
+</html>

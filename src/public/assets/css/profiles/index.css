@@ -1,0 +1,17 @@
+.profile-container {
+  display: flex;
+  width: 100%;
+
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.profile-name {
+
+}
+
+.profile-description {
+  font-family: inherit;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}

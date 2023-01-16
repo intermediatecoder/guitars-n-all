@@ -28,7 +28,6 @@ mainRouter.get("/shop", async (req, res, next) => {
       group by P.id;
     `);
 
-
     if(products.length > 0) {
       let [guitars] = products;
 
@@ -291,8 +290,305 @@ mainRouter.get("/about", async (req, res, next) => {
   return res.render("pages/about");
 });
 
-mainRouter.get("/payment", async (req, res, next) => {
-  return res.render("pages/credit");
+mainRouter.all("/payment", async (req, res, next) => {
+  if(req.method === "GET")
+  {
+    const { type, product_id } = req.query;
+    console.log(type, product_id);
+
+    let data = {
+      status: "error",
+      message: "Could not load the order",
+    }
+
+    if(type === "buy_now")
+    {
+      try {
+        // const result = await db.query(`
+        //   select id, name, description, features, image
+        //   from products
+        //   where id = :id`,
+        const result = await db.query(`
+          select P.id, P.name, P.features, P.image, P.description,
+            SP.seller_id,
+
+            if(count(V.id) = 0,
+              json_array(),
+              json_arrayagg(V.variant_name)
+            ) as variants,
+
+            if(count(SP.id) = 0,
+                json_array(),
+                json_arrayagg(json_object(
+                  'id', SP.id,
+                  'price', price,
+                  "seller_id", seller_id,
+                  "seller_name", S.name,
+                  "variant_id", V.id,
+                  "variant_name", V.variant_name
+                ))
+            ) as prices
+          
+          from products as P
+          left join seller_products as SP
+          on (P.id=SP.product_id)
+          left join variants as V
+          on (SP.variant_id=V.id)
+          left join profiles as S
+          on (S.id = SP.seller_id)
+          
+          where P.id = :id
+          group by P.id;`,
+          {
+            replacements: { id: product_id },
+            type: QueryTypes.SELECT,
+          }
+        );
+
+        if(result.length > 0) {
+          // Product was found
+          const product = result[0];
+          data = {
+            status: "success",
+            product,
+          }
+
+        } else {
+          // Product was not found
+          data = {
+            status: "error",
+            message: "Product not found."
+          };
+        }
+      } catch (error) {
+        data = {
+          status: "error",
+          message: "Could not load product."
+        };
+      }
+    }
+
+    // Type of order
+    Object.assign(data, {
+      type
+    });
+
+    console.log(JSON.stringify(data, null, 2));
+
+    return res.render("pages/credit", {
+      data,
+    });
+  }
+  else if(req.method === "POST")
+  {
+    const { type } = req.body;
+    const data = {
+      status: "error",
+      message: "Could not place order",
+    };
+
+    if(type === "buy_now") {
+      const {
+        name,
+        email,
+        phone_no,
+        address,
+        pincode,
+        city,
+        seller_product_id
+      } = req.body;
+
+      const t = await db.transaction();
+      const { profile_id } = req.session.auth;
+
+      console.log("SELLER PRODUCT ID = ", seller_product_id);
+
+      let order_id, result;
+
+      try {
+        [order_id] = await db.query(
+          `
+            insert into orders
+            (
+              profile_id, name, email,
+              phone_no, address, pincode, city
+            )
+            values
+            (
+              :profile_id, :name, :email, :phone_no,
+              :address, :pincode, :city
+            )
+          `,
+          {
+            replacements: {
+              profile_id,
+              name,
+              email,
+              phone_no,
+              address,
+              pincode,
+              city,
+            },
+            type: QueryTypes.INSERT,
+            transaction: t,
+          }
+        );
+
+        [result] = await db.query(
+          `
+            insert into order_items
+            (
+              seller_product_id,
+              order_id,
+              quantity
+            )
+            values
+            (
+              :seller_product_id,
+              :order_id,
+              :quantity
+            )
+          `,
+          {
+            replacements: {
+              seller_product_id,
+              order_id,
+              quantity: 1,
+            },
+            type: QueryTypes.INSERT,
+            transaction: t,
+          }
+        );
+
+        console.log("ORDER SUCCESSFUL! Order ID = ", order_id);
+        
+        await t.commit();
+
+        return res.redirect("/orders?success=true");
+      } catch (error) {
+        console.log(error);
+        await t.rollback();
+      }
+    }
+  }
+  return next();
+});
+
+mainRouter.get("/profiles/:id", async (req, res, next) => {
+  const { id } = req.params;
+
+  let data = {
+    status: "error",
+    message: "Could not load profile"
+  };
+
+  if(id) {
+    try {
+      const [ result ] = await db.query(`
+          select * from profiles
+          where id = :id;
+        `,
+        {
+          replacements: { id },
+          type: QueryTypes.SELECT,
+        }
+      );
+
+      if(result) {
+        data = {
+          status: "success",
+          profile: result,
+        }
+      }
+    } catch (error) { }
+  }
+
+  return res.render("pages/profiles/index", {
+    data
+  });
+});
+
+
+
+mainRouter.get("/orders", async (req, res, next) => {
+  if(!req.session && req.session.auth) {
+    res.redirect("/");
+  }
+
+  let data = {
+    status: "error",
+    message: "Could not load orders",
+  };
+
+  try {
+    const { profile_id } = req.session.auth;
+    const result = await db.query(`
+        SELECT
+          O.id as order_id,
+          O.name,
+          O.email,
+          O.phone_no,
+          O.address,
+          O.pincode,
+          O.city,
+          O.created_at,
+
+          if(count(OI.id) = 0,
+             json_array(),
+             json_arrayagg(json_object(
+                 'id', OI.id,
+                 'seller_product_id', SP.id,
+                 'product_name', P.name,
+                 'quantity', OI.quantity,
+                 'seller_id', S.id,
+                 'seller_name', S.name,
+                 'price', SP.price,
+                 'variant_name', V.variant_name
+             ))
+          ) as items
+
+        from orders as O
+
+        left join
+            order_items as OI
+            on (O.id = OI.order_id)
+
+        left join
+          seller_products as SP
+            on (SP.id = OI.seller_product_id)
+            
+        left join
+          products as P
+            on (P.id = SP.product_id)
+
+        left join
+          profiles as S
+          on (S.id = SP.seller_id)
+
+        left join
+          variants as V
+            on (V.id = SP.variant_id)
+
+        where profile_id = :profile_id
+        group by O.id;
+        `, {
+          type: QueryTypes.SELECT,
+          replacements: {
+            profile_id,
+          }
+        });
+    console.log("RESULT!!!!!!!: ", result);
+    data = {
+      status: "success",
+      orders: result,
+    };
+  } catch (error) {
+    console.log("ERROR!!!!!!!!!!!  ", error);
+  }
+
+  return res.render("pages/orders", {
+    data
+  });
 })
 
 export default mainRouter;

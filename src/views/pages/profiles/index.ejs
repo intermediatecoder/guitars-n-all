@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../../partials/head'); %>
+  <title><%= (data && data.status === "success" ? data.profile.name : "Profile") %> | GuitarHub</title>
+
+  <link rel="stylesheet" href="/assets/css/profiles/index.css" />
+</head>
+<body>
+<header>
+  <%- include('../../partials/header'); %>
+</header>
+
+<main>
+  <div class="basic-container">
+
+    <% if(data && data.status === "success") { %>
+    <div class="profile-container">
+      <div>
+        <h1 class="profile-name"><%= data.profile.name %></h1>
+      </div>
+
+      <div>
+        <pre class="profile-description"><%= data.profile.description %></pre>
+      </div>
+    </div>
+    <% } else { %>
+    <b>Profile was not found.</b>
+    <% } %>
+
+  </div>
+</main>
+
+<footer>
+  <%- include('../../partials/footer'); %>
+</footer>
+</body>
+</html>

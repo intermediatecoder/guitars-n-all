@@ -7,6 +7,7 @@ import morgan from "morgan";
 
 import mainRouter from "./routes/main.router.js";
 import lessonsRouter from "./routes/lessons.router.js";
+import dashboardRouter from "./routes/dashboard.route.js";
 
 import { connectToDatabase, db } from "./models/models.js";
 import { patchRender } from "./middlewares/render-patcher.js";
@@ -50,6 +51,7 @@ async function main() {
   // Setup routes
   app.use(mainRouter);
   app.use("/lessons", lessonsRouter);
+  app.use("/dashboard", dashboardRouter);
 
   try {
     const result = await connectToDatabase();
