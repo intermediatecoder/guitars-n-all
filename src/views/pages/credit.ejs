@@ -16,6 +16,9 @@
 <body>
   <header><%- include("../partials/header"); %></header>
   <main>
+    <%
+      const { product } = data;
+    %>
     <div class="main-container">
       <div class="left">
         <div class="details-form-container">
@@ -38,11 +41,11 @@
               <p>Phone No.</p>
               <input type="text" class="input-box" name="phone_no" placeholder="Enter your Phone no">
             </div>
-            
+
             <div class="Detail">
               <p>Address</p>
               <textarea class="input-box" type="text" name="address" placeholder="Enter your Address"
-                rows="3" ></textarea>
+                rows="3"></textarea>
             </div>
             <div class="Detail">
               <p>Pin Code</p>
@@ -74,96 +77,134 @@
               <button type="submit">Submit</button>
             </div>
           </form>
+           <div class="buy-now-description">
+          <div class="buy-now-left">
+            <img class="product-image" src="<%- product.image %>" />
+          </div>
+          <div class="buy-now-right">
+            <h2>Prices</h2>
+            <div class="product-prices-list">
 
+              <% for (const price of product.prices) {
+              %>
+              <h3>&#x20B9;<%= price.price %></h3>
+              <%
+              }
+              %>
+            </div> 
+            <div class="count">
+              <button class="count-increase" style="height: 25px; width:25px; ">+</button>
+              <button class="count-decrease"  style="height: 25px; width:25px;">-</button>
+              
+            </div>
+            <script src="/assete/js/count.js"></script>
+          </div>
+        </div>
         </div>
       </div>
 
 
       <div class="right">
-        <div class="container">
-          <div class="card-container">
-            <div class="front">
-              <div class="image">
-                <img src="image/chip.png" alt="" />
-                <img src="image/visa.png" alt="" />
-              </div>
-              <div class="card-number-box">################</div>
-              <div class="flexbox">
-                <div class="box">
-                  <span>card holder</span>
-                  <div class="card-holder-name">full name</div>
+        <div class="right-container">
+          <div data-tab="credit-card" class="credit-right">
+            <h1 style="background-color: grey; width: 100%;">Credit-card</h1>
+          </div>
+          <div data-tab="upi" class="upi-left">
+            <h1 style="background-color: grey; width:100%">UPI</h1>
+          </div>
+        </div>
+        <div class="payment-tabs">
+          <div class="tab tab-active" data-tab-id="credit-card">
+            <div class="container">
+              <div class="card-container">
+
+                <div class="front">
+                  <div class="image">
+                    <img src="image/chip.png" alt="" />
+                    <img src="image/visa.png" alt="" />
+                  </div>
+                  <div class="card-number-box">################</div>
+                  <div class="flexbox">
+                    <div class="box">
+                      <span>card holder</span>
+                      <div class="card-holder-name">full name</div>
+                    </div>
+                    <div class="box">
+                      <span>expires</span>
+                      <div class="expiration">
+                        <span class="exp-month">mm</span>
+                        <span class="exp-year">yy</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="box">
-                  <span>expires</span>
-                  <div class="expiration">
-                    <span class="exp-month">mm</span>
-                    <span class="exp-year">yy</span>
+
+                <div class="back">
+                  <div class="stripe"></div>
+                  <div class="box">
+                    <span>cvv</span>
+                    <div class="cvv-box"></div>
+                    <img src="image/visa.png" alt="" />
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div class="back">
-              <div class="stripe"></div>
-              <div class="box">
-                <span>cvv</span>
-                <div class="cvv-box"></div>
-                <img src="image/visa.png" alt="" />
-              </div>
+              <form action="">
+                <div class="inputBox">
+                  <span>card number</span>
+                  <input type="text" maxlength="16" class="card-number-input" />
+                </div>
+                <div class="inputBox">
+                  <span>card holder</span>
+                  <input type="text" class="card-holder-input" />
+                </div>
+                <div class="flexbox">
+                  <div class="inputBox">
+                    <span>expiration mm</span>
+                    <select name="" id="" class="month-input">
+                      <option value="month" selected disabled>month</option>
+                      <option value="01">01</option>
+                      <option value="02">02</option>
+                      <option value="03">03</option>
+                      <option value="04">04</option>
+                      <option value="05">05</option>
+                      <option value="06">06</option>
+                      <option value="07">07</option>
+                      <option value="08">08</option>
+                      <option value="09">09</option>
+                      <option value="10">10</option>
+                      <option value="11">11</option>
+                      <option value="12">12</option>
+                    </select>
+                  </div>
+                  <div class="inputBox">
+                    <span>expiration yy</span>
+                    <select name="" id="" class="year-input">
+                      <option value="year" selected disabled>year</option>
+                      <option value="2021">2021</option>
+                      <option value="2022">2022</option>
+                      <option value="2023">2023</option>
+                      <option value="2024">2024</option>
+                      <option value="2025">2025</option>
+                      <option value="2026">2026</option>
+                      <option value="2027">2027</option>
+                      <option value="2028">2028</option>
+                      <option value="2029">2029</option>
+                      <option value="2030">2030</option>
+                    </select>
+                  </div>
+                  <div class="inputBox">
+                    <span>cvv</span>
+                    <input type="text" maxlength="3" class="cvv-input" />
+                  </div>
+                </div>
+                <input type="submit" value="submit" class="submit-btn" />
+              </form>
             </div>
           </div>
-
-          <form action="">
-            <div class="inputBox">
-              <span>card number</span>
-              <input type="text" maxlength="16" class="card-number-input" />
-            </div>
-            <div class="inputBox">
-              <span>card holder</span>
-              <input type="text" class="card-holder-input" />
-            </div>
-            <div class="flexbox">
-              <div class="inputBox">
-                <span>expiration mm</span>
-                <select name="" id="" class="month-input">
-                  <option value="month" selected disabled>month</option>
-                  <option value="01">01</option>
-                  <option value="02">02</option>
-                  <option value="03">03</option>
-                  <option value="04">04</option>
-                  <option value="05">05</option>
-                  <option value="06">06</option>
-                  <option value="07">07</option>
-                  <option value="08">08</option>
-                  <option value="09">09</option>
-                  <option value="10">10</option>
-                  <option value="11">11</option>
-                  <option value="12">12</option>
-                </select>
-              </div>
-              <div class="inputBox">
-                <span>expiration yy</span>
-                <select name="" id="" class="year-input">
-                  <option value="year" selected disabled>year</option>
-                  <option value="2021">2021</option>
-                  <option value="2022">2022</option>
-                  <option value="2023">2023</option>
-                  <option value="2024">2024</option>
-                  <option value="2025">2025</option>
-                  <option value="2026">2026</option>
-                  <option value="2027">2027</option>
-                  <option value="2028">2028</option>
-                  <option value="2029">2029</option>
-                  <option value="2030">2030</option>
-                </select>
-              </div>
-              <div class="inputBox">
-                <span>cvv</span>
-                <input type="text" maxlength="4" class="cvv-input" />
-              </div>
-            </div>
-            <input type="submit" value="submit" class="submit-btn" />
-          </form>
+          <div class="tab" data-tab-id="upi">
+            <img src="https://imgs.search.brave.com/wueYcKM6w1-cjcLAwhS0CV7ailu10PVqQHot2Ps6Vr4/rs:fit:1200:1200:1/g:ce/aHR0cHM6Ly93d3cu/aWF0c2U3Mjgub3Jn/L3NpdGVzL2RlZmF1/bHQvZmlsZXMvTXlf/UERGXzEucG5n" width="50%" height="50%">
+          </div>
         </div>
       </div>
     </div>
