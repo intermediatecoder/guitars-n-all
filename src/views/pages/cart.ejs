@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <%- include('../partials/head'); %>
-  <title>Your Cart | GuitarHub</title>
+  <title>Your Cart | Guitars-n-All</title>
 
   <link rel="stylesheet" href="/assets/css/cart.css" />
   <script src="/assets/js/cart.js"></script>
@@ -15,7 +15,10 @@
 <main>
   <div class="basic-container">
     <h1>Your cart</h1>
+    <button onclick="window.location='/shop';" class="button-checkout">Return to shop</button>
+    <% if(data.cartItems.length > 0) { %>
     <button onclick="window.location='/payment';" class="button-checkout">Go to checkout</button>
+    <% } %>
     <p><b>Current Total = </b><span class="cart-total">0.00</span>/-</p>
 
     <div class="cart">
@@ -39,6 +42,9 @@
               </div>
             </div>
             <p><b>Total price:</b> <span class="item-total"><%= cartItemTotal.toFixed(2) %></span></p>
+          </div>
+          <div class="cart-item-actions">
+            <a href="/cart/delete?cart_item_id=<%= cartItem.id %>">Delete</a>
           </div>
         </div>
       <% } %>

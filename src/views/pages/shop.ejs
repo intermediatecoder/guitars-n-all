@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shop | GuitarHub</title>
+    <title>Shop | Guitars-n-All</title>
 
     <%- include("../partials/head"); %>
 
@@ -28,7 +28,8 @@
             <div class="Price">
               <h4>Prices</h4>
               <% for (const price of product.prices) { %>
-              <p>&#x20B9;&nbsp;<%= price.price %></p>
+              <p>&#x20B9;&nbsp;<%= price.price %> <a class="add-to-cart" href="/cart/add-to-cart?seller_product_id=<%= price.id %>">Add to cart</a></p>
+              
               <% } %>
             </div>
             <div class="button-buy">
@@ -49,13 +50,13 @@
                     BUY NOW
                   </button>
                 </a>
-                <button class="btn-product">
+                <!-- <button class="btn-product">
                   <img
                     src="https://imgs.search.brave.com/aUecr4Z_iVEe733FN9ZSv5Y6B1Oj5tesNiQUOZHJFyc/rs:fit:450:470:1/g:ce/aHR0cHM6Ly9jb21w/cy5jYW5zdG9ja3Bo/b3RvLmNvbS9pY29u/LW9mLWNvbnN0cnVj/dGlvbi1jYXJ0LXZl/Y3Rvci1jbGlwYXJ0/X2NzcDQwNDI4OTAy/LmpwZw"
                     width="30px"
                     height="20px" />
                   ADD CART
-                </button>
+                </button> -->
               </div>
             </div>
           </div>
