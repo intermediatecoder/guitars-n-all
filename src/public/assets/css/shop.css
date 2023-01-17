@@ -82,7 +82,7 @@
   }
   .button-bar button.btn-product {
     display: flex;
-    width: 8rem;
+    width: 16rem;
     margin-right: 10px; 
     --tw-bg-opacity: 1;
     background-color: #fb641b;
@@ -92,6 +92,7 @@
     text-align:middle;
     --tw-text-opacity: 1;
     color: white;
+    justify-content: center;
     /* background-color: pink; */
   }
 
@@ -118,3 +119,15 @@
     width: 100%;
     max-width: 45%;
   }
+
+.add-to-cart {
+  border: solid 1px black;
+  border-radius: 0.5rem;
+  padding: 0.1rem 0.5rem;
+}
+
+.Price {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
