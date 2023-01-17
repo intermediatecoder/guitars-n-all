@@ -5,7 +5,39 @@ import { db, QueryTypes } from "../models/models.js";
 const mainRouter = express.Router();
 
 mainRouter.get("/", async (req, res, next) => {
-  return res.render("pages/index");
+  let data = {
+    status: "success",
+    products: [],
+    product_types: [],
+  };
+
+  try {
+    const result = await db.query(`
+      select * from products
+      order by id
+      limit 5
+    `, {
+      type: QueryTypes.SELECT
+    });
+
+    Object.assign(data, {
+      products: result,
+    });
+  } catch (error) { }
+
+  Object.assign(data, {
+    product_types: [
+      "Acoustic Guitars",
+      "Bass Guitars",
+      "Electric Guitars",
+      "Effect Pedals",
+      "Accessories",
+    ]
+  });
+
+  return res.render("pages/index", {
+    data
+  });
 });
 
 mainRouter.get("/shop", async (req, res, next) => {
