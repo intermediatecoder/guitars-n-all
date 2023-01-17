@@ -119,10 +119,10 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `profile_id`, `name`, `email`, `phone_no`, `address`, `pincode`, `city`, `created_at`) VALUES
-(6, 3, 'Atmanand Nagpure', 'atmanandnagpure31@gmail.com', '123', 'Plot G-3, Sector N-4, CIDCO, Aurangabad', '431003', 'Aurangabad', '2023-01-16 02:49:50'),
-(8, 3, 'Atmanand Nagpure', 'atmanandnagpure31@gmail.com', '123', 'Plot G-3, Sector N-4, CIDCO, Aurangabad', '431003', 'Aurangabad', '2023-01-16 03:37:14'),
-(9, 3, 'Aditya Bhadane', 'iegiengoi@gnqwieng.egwqeg', '23123123', 'Plot G-3, Sector N-4, CIDCO, Aurangabad', '431003', 'Aurangabad', '2023-01-16 05:04:48'),
-(13, 3, 'name', 'thing', 'thing', 'ninqepign', '431003', 'Aurangabad', '2023-01-17 06:09:39');
+(6, 3, 'Atmanand Nagpure', '', '', '', '', '', '2023-01-16 02:49:50'),
+(8, 3, 'Atmanand Nagpure', '', '', '', '', '', '2023-01-16 03:37:14'),
+(9, 3, 'Aditya Bhadane', 'io@gnqwieng.egwqeg', '', '', '', '', '2023-01-16 05:04:48'),
+(13, 3, 'ok', 'ok', 'ok', '123123g', '', '', '2023-01-17 06:09:39');
 
 -- --------------------------------------------------------
 
