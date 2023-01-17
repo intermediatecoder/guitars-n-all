@@ -35,12 +35,9 @@
         <div class="product-prices-list">
           <!-- <h3>&#x20B9;14899</h3>
           <h3>&#x20B9;15699</h3> -->
-          <% for (const price of product.prices) {
-          %>
-          <h3>&#x20B9;<%= price.price %></h3>
-          <%
-          }
-          %>
+          <% for (const price of product.prices) { %>
+            <p><%= price.variant_name %> - &#x20B9;&nbsp;<%= price.price %> <a class="add-to-cart" href="/cart/add-to-cart?seller_product_id=<%= price.id %>">Add to cart</a></p>
+          <% } %>
         </div>
       </div>
       <h1>

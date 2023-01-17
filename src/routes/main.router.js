@@ -104,7 +104,13 @@ mainRouter.get("/products/:id", async (req, res, next) => {
         ) as variants,
             if(count(SP.id) = 0,
                 json_array(),
-          json_arrayagg(json_object('id', SP.id, 'price', price, "seller_id", seller_id))
+          json_arrayagg(json_object(
+            'id', SP.id,
+            'price', price,
+            "seller_id", seller_id,
+            "variant_id", V.id,
+            "variant_name", V.variant_name
+          ))
         ) as prices
       
       from products as P
