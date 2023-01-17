@@ -18,6 +18,39 @@
     const tabId = toggle.getAttribute("data-tab");
     toggle.addEventListener("click", switchTab(tabId));
   }
+
+
+  const remove = document.querySelector(".remove");
+  const add = document.querySelector(".add");
+  const quantity = document.querySelector(".quantity");
+
+  if(remove && add && quantity) {
+    remove.addEventListener("click", event => {
+      event.preventDefault();
+      cart.decrement(
+        async (success, value) => {
+          return true;
+        }
+      )(event)
+    });
+
+    add.addEventListener("click", event => {
+      event.preventDefault();
+      cart.increment(
+        async (success, value) => {
+          return true;
+        }
+      )(event)
+    });
+
+    quantity.addEventListener("change", event => {
+      cart.update(
+        async (success, value) => {
+          return true;
+        }
+      )(event)
+    });
+  }
 })();
 
 document.querySelector(".card-number-input").oninput = () => {

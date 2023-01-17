@@ -7,6 +7,7 @@ export const patchRender = () => {
     const session = req.session;
     const auth = session?.auth;
     let profile = null;
+    let cart = null;
 
     if(auth) {
       try {
@@ -28,6 +29,26 @@ export const patchRender = () => {
           profile = result[0];
         }
       } catch (error) { }
+
+      try {
+        const result = await db.query(`
+            select
+              count(CI.id) as cart_items_count
+
+            from carts as C
+            inner join cart_items as CI
+            on (C.id = CI.cart_id)
+            where C.profile_id = :profile_id;
+          `,
+          {
+            replacements: {
+              profile_id: auth.profile_id
+            },
+            type: QueryTypes.SELECT
+          });
+
+        cart = result[0];
+      } catch (error) { }
     }
 
     const patchedRender = (...args) => {
@@ -39,6 +60,7 @@ export const patchRender = () => {
         session,
         auth,
         profile,
+        cart
       });
       args[1].flash = args[1].flash || {};
 

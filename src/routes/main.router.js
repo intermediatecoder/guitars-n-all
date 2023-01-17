@@ -252,8 +252,24 @@ mainRouter.post("/signup", async (req, res, next) => {
       }
     );
 
+    [cardId] = await db.query(`
+      insert into carts
+        (profile_id)
+      values
+        (:profile_id);
+      `,
+      {
+        replacements: {
+          profile_id: profileId,
+        },
+        type: QueryTypes.INSERT,
+        transaction: t,
+      }
+    );
+
     console.log(accountId);
     console.log(profileId);
+    console.log(cardId);
 
     
     await t.commit();
@@ -366,6 +382,55 @@ mainRouter.all("/payment", async (req, res, next) => {
           message: "Could not load product."
         };
       }
+    } else {
+      try {
+        // const result = await db.query(`
+        //   select id, name, description, features, image
+        //   from products
+        //   where id = :id`,
+        const result = await db.query(`
+          select CI.id, P.name, P.image, SP.seller_id, S.name as seller_name, SP.price, CI.quantity
+          from cart_items as CI
+
+          inner join
+          carts as C
+          on (C.id = CI.cart_id)
+
+          inner join
+          seller_products as SP
+          on (SP.id = CI.seller_product_id)
+
+          left join
+          products as P
+          on (P.id = SP.product_id)
+
+          left join
+          profiles as S
+          on (S.id = SP.seller_id)
+
+          where
+          C.profile_id = :profile_id;
+          `,
+          {
+            replacements: {
+              profile_id: req.session.auth.profile_id
+            },
+            type: QueryTypes.SELECT,
+          }
+        );
+
+        // Product was found
+        const products = result;
+        Object.assign(data, {
+          status: "success",
+          products,
+        });
+      } catch (error) {
+        data = {
+          status: "error",
+          message: "Could not load product."
+        };
+      }
     }
 
     // Type of order
@@ -395,7 +460,8 @@ mainRouter.all("/payment", async (req, res, next) => {
         address,
         pincode,
         city,
-        seller_product_id
+        seller_product_id,
+        quantity,
       } = req.body;
 
       const t = await db.transaction();
@@ -453,7 +519,7 @@ mainRouter.all("/payment", async (req, res, next) => {
             replacements: {
               seller_product_id,
               order_id,
-              quantity: 1,
+              quantity,
             },
             type: QueryTypes.INSERT,
             transaction: t,
@@ -473,6 +539,65 @@ mainRouter.all("/payment", async (req, res, next) => {
   }
   return next();
 });
+
+mainRouter.get("/cart/add-to-cart", async (req, res, next) => {
+  let { return_url } = req.query;
+  return_url = return_url || "/";
+
+  let data = {
+    status: "error",
+    message: "Could not place older",
+  };
+
+  try {
+
+    const t = await db.transaction();
+    const { profile_id } = req.session.auth;
+
+    const [ order ] = await db.query(`
+      select id from orders
+      where profile_id = :profile_id
+      `, {
+        replacements: {
+          profile_id,
+        },
+        type: QueryTypes.SELECT,
+      });
+
+    [result] = await db.query(`
+        insert into order_items
+        (
+          seller_product_id,
+          order_id,
+          quantity
+        )
+        values
+        (
+          :seller_product_id,
+          :order_id,
+          :quantity
+        )
+      `,
+      {
+        replacements: {
+          seller_product_id,
+          order_id,
+          quantity,
+        },
+        type: QueryTypes.INSERT,
+        transaction: t,
+      }
+    );
+
+    await t.commit();
+
+    console.log("ORDER SUCCESSFUL! Order ID = ", order_id);
+  } catch (e) {
+
+  }
+
+  return res.redirect(return_url);
+})
 
 mainRouter.get("/profiles/:id", async (req, res, next) => {
   const { id } = req.params;
@@ -577,18 +702,110 @@ mainRouter.get("/orders", async (req, res, next) => {
             profile_id,
           }
         });
-    console.log("RESULT!!!!!!!: ", result);
-    data = {
+    Object.assign(data, {
       status: "success",
       orders: result,
-    };
+    });
   } catch (error) {
-    console.log("ERROR!!!!!!!!!!!  ", error);
   }
 
   return res.render("pages/orders", {
     data
   });
-})
+});
+
+mainRouter.post("/api/cart/change", async (req, res, next) => {
+  const { action } = req.body;
+
+  console.log(action);
+  
+  if(action === "update-quantity") {
+    const { cartItemId, quantity } = req.body;
+    console.log(cartItemId, quantity);
+
+    try {
+      const result = await db.query(`
+        update cart_items
+        set quantity = :quantity
+        where id = :cart_item_id;
+        `,
+        {
+          replacements: {
+            quantity,
+            cart_item_id: cartItemId,
+          },
+          type: QueryTypes.UPDATE,
+        }
+      );
+
+
+      if(result) {
+        return res.json({
+          message: "Updated quantity successfully!",
+          cartItemId,
+          quantity,
+        })
+      }
+    } catch (e) {
+
+    }
+  }
+
+  return res.json({
+    error: true,
+    message: "Failed to change cart"
+  })
+});
+
+mainRouter.get("/cart", async (req, res, next) => {
+  let data = {
+    status: "error",
+    message: "Could not load cart",
+  };
+
+  try {
+    const result = await db.query(`
+      select CI.id, P.name, P.image, SP.seller_id, S.name as seller_name, SP.price, CI.quantity
+      from cart_items as CI
+
+      inner join
+      carts as C
+      on (C.id = CI.cart_id)
+
+      inner join
+      seller_products as SP
+      on (SP.id = CI.seller_product_id)
+
+      left join
+      products as P
+      on (P.id = SP.product_id)
+
+      left join
+      profiles as S
+      on (S.id = SP.seller_id)
+
+      where
+      C.profile_id = :profile_id;
+      `,
+      {
+        replacements: {
+          profile_id: req.session.auth.profile_id
+        },
+        type: QueryTypes.SELECT,
+      }
+    );
+
+    Object.assign(data, {
+      status: "success",
+      cartItems: result,
+    });
+  } catch (error) {
+
+  }
+
+  return res.render("pages/cart", {
+    data
+  })
+});
 
 export default mainRouter;

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head'); %>
+  <title>Your Cart | GuitarHub</title>
+
+  <link rel="stylesheet" href="/assets/css/cart.css" />
+  <script src="/assets/js/cart.js"></script>
+</head>
+<body>
+<header>
+  <%- include('../partials/header'); %>
+</header>
+
+<main>
+  <div class="basic-container">
+    <h1>Your cart</h1>
+    <button onclick="window.location='/payment';" class="button-checkout">Go to checkout</button>
+    <p><b>Current Total = </b><span class="cart-total">0.00</span>/-</p>
+
+    <div class="cart">
+      <% for (const cartItem of data.cartItems) {
+        const cartItemTotal = Number(cartItem.price) * Number(cartItem.quantity) || 0;
+      %>
+        <div class="cart-item" data-item-id="<%= cartItem.id %>" data-item-price="<%= cartItem.price %>">
+          <div class="cart-item-image">
+            <img src="<%- cartItem.image %>" width="100px" />
+          </div>
+          <div class="cart-item-description">
+            <h2><%- cartItem.name %></h2>
+            <p><b>Seller:</b> <%= cartItem.seller_name %></p>
+            <p><b>Price:</b> <%= cartItem.price %></p>
+            <div class="flex items-center">
+              <b>Quantity:</b>
+              <div class="quantity-editor">
+                <button class="remove">-</button>
+                <input class="quantity" value="<%= cartItem.quantity %>" />
+                <button class="add">+</button>
+              </div>
+            </div>
+            <p><b>Total price:</b> <span class="item-total"><%= cartItemTotal.toFixed(2) %></span></p>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <script>
+    const items = {
+      <% for(const cartItem of data.cartItems) { %>
+        <%= cartItem.id %>: {
+          id: <%- cartItem.id %>,
+          quantity: <%- cartItem.quantity %>,
+          price: "<%- cartItem.price %>"
+        },
+      <% } %>
+    };
+  </script>
+</main>
+
+<footer>
+  <%- include('../partials/footer'); %>
+</footer>
+</body>
+</html>

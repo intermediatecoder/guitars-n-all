@@ -142,3 +142,24 @@ a {
   background-color: #F33;
   color: white;
 }
+
+.quantity-editor {
+  margin: 0 0.5rem;
+  display: flex;
+
+  --size: 1.5rem;
+}
+
+.quantity-editor > button {
+  width: var(--size);
+  height: var(--size);
+  border: none;
+  outline: none;
+}
+
+.quantity-editor > input {
+  width: var(--size);
+  height: var(--size);
+
+  text-align: center;
+}

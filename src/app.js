@@ -47,6 +47,7 @@ async function main() {
 
   // Url encoded form handler
   app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
 
   // Setup routes
   app.use(mainRouter);

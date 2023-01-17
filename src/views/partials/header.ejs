@@ -18,6 +18,7 @@
         <% if(auth) { %>
         <li><a href="/dashboard/edit-profile">Dashboard</a></li>
         <li><a href="/orders">Orders</a></li>
+        <li><a href="/cart">Cart (<%= cart["cart_items_count"] %>)</a></li>
         <% } %>      
       </ul>
     </div>
