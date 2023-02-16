@@ -1,6 +1,10 @@
 # guitars-n-all
 
-A simple E-commerce website.
+<div>
+  <img width="400px" src="/data/logo-no-background.png" alt="Guitars-n-all Logo" />
+</div>
+
+An E-commerce and E-learning website about guitars.
 
 ## Technology Stack
 
