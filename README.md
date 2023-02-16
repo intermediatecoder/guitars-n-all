@@ -17,7 +17,7 @@ An E-commerce and E-learning website about guitars.
 ## Prerequisites
 
 - Node.js 14+
-- MySQL 8.0+
+- MySQL Server 8.0+
 
 ## How to use
 
