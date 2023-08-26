@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        button.add-to-cart {
+            border: solid 1px black;
+            border-radius: 0.5rem;
+            padding: 0.2rem 1rem;
+            background: none;
+        }
+        .add-remove {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .add-remove > * {
+            width: 2rem;
+            height: 2rem;
+        }
+
+        .add-remove .action {
+            border: 0;
+            outline: 0;
+            background: #ccc;
+        }
+        .add-remove input {
+            padding: 0;
+            margin: 0;
+            border: none;
+        }
+
+
+    </style>
+</head>
+<body>
+    <p>
+       <h1>
+
+        Hello i am fine how are you!!!</h1>
+        <img src="https://imgs.search.brave.com/XzQMTHkyx1Ktwb0OyDKRyFK_Hk0eeRhpa6hlKgVWkNA/rs:fit:1200:1200:1/g:ce/aHR0cDovL3d3dy50/YW1pdS5lZHUvbmV3/c2luZm8vaW1hZ2Vz/L3N0dWRlbnQtbGlm/ZS9jYW1wdXMtc2Nl/bmVyeS5KUEc" style="padding-left: 800px;" width:"250px" height="250px"/>
+        <button class="add-to-cart">Add to cart</button>
+    </p>
+
+    <div class="add-remove">
+        <button class="action add">+</button>
+        <input type="text" class="quantity" name="quantity" value="1" />
+        <button class="action remove">-</button>
+    </div>
+
+    <script>
+        const quantity = document.querySelector(".add-remove .quantity");
+        const add = document.querySelector(".add");
+        const remove = document.querySelector(".remove");
+
+        const changeQuantity = fn => (event) => {
+            let value = Number(quantity.value);
+            if(fn) {
+                value = fn(value);
+            }
+            if(value < 1) return;
+
+            quantity.value = value;
+        };
+
+        add.addEventListener('click', changeQuantity(value => value + 1));
+        remove.addEventListener('click', changeQuantity(value => value - 1));
+    </script>
+</body>
+</html>
