@@ -91,10 +91,6 @@ mainRouter.get("/products/:id", async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    // const result = await db.query(`
-    //   select id, name, description, features, image
-    //   from products
-    //   where id = :id`,
     const result = await db.query(`
       select P.id, P.name, P.features, P.image, P.description,
         SP.seller_id,
